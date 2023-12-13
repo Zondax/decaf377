@@ -1,6 +1,7 @@
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use crate::{element::projective::Element, AffineElement, Fr};
+use crate::AffineElement;
+use crate::{element::projective::Element, Fr};
 
 impl<'a, 'b> Add<&'b Element> for &'a Element {
     type Output = Element;

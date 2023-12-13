@@ -3,8 +3,10 @@ use std::convert::TryInto;
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::io::{Read, Write};
 
+#[cfg(feature = "std")]
 use crate::{AffineElement, Element, Encoding};
 
+#[cfg(feature = "std")]
 impl CanonicalDeserialize for AffineElement {
     fn deserialize_with_mode<R: Read>(
         reader: R,
@@ -27,6 +29,7 @@ impl CanonicalDeserialize for AffineElement {
     }
 }
 
+#[cfg(feature = "std")]
 impl CanonicalSerialize for AffineElement {
     fn serialized_size(&self, compress: ark_serialize::Compress) -> usize {
         match compress {

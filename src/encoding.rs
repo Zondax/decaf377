@@ -6,14 +6,17 @@ use ark_ec::twisted_edwards::TECurveConfig;
 use ark_ff::{Field, One};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Read, Write};
 
+use crate::{EncodingError, Fq, OnCurve, Sign};
+
+#[cfg(feature = "std")]
 use crate::{
-    constants::TWO, element::Decaf377EdwardsConfig, EdwardsProjective, Element, EncodingError, Fq,
-    OnCurve, Sign, SqrtRatioZeta,
+    constants::TWO, element::Decaf377EdwardsConfig, EdwardsProjective, Element, SqrtRatioZeta,
 };
 
 #[derive(Copy, Clone, Default, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Encoding(pub [u8; 32]);
 
+#[cfg(feature = "std")]
 impl std::fmt::Debug for Encoding {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!(
@@ -23,6 +26,7 @@ impl std::fmt::Debug for Encoding {
     }
 }
 
+#[cfg(feature = "std")]
 impl Encoding {
     #[deprecated(note = "please use `vartime_decompress` instead")]
     pub fn decompress(&self) -> Result<Element, EncodingError> {
@@ -83,6 +87,7 @@ impl Encoding {
     }
 }
 
+#[cfg(feature = "std")]
 impl Element {
     pub fn negate(&self) -> Element {
         Element { inner: -self.inner }
@@ -124,6 +129,7 @@ impl Element {
         self.vartime_compress()
     }
 
+    #[cfg(feature = "std")]
     pub fn vartime_compress(&self) -> Encoding {
         let s = self.vartime_compress_to_field();
 
@@ -139,12 +145,14 @@ impl Element {
     }
 }
 
+#[cfg(feature = "std")]
 impl From<&Element> for Encoding {
     fn from(point: &Element) -> Self {
         point.vartime_compress()
     }
 }
 
+#[cfg(feature = "std")]
 impl From<Element> for Encoding {
     fn from(point: Element) -> Self {
         point.vartime_compress()
@@ -169,6 +177,7 @@ impl CanonicalSerialize for Encoding {
     }
 }
 
+#[cfg(feature = "std")]
 impl CanonicalSerialize for Element {
     fn serialized_size(&self, compress: ark_serialize::Compress) -> usize {
         match compress {
@@ -212,6 +221,7 @@ impl From<Encoding> for [u8; 32] {
     }
 }
 
+#[cfg(feature = "std")]
 impl TryFrom<&Encoding> for Element {
     type Error = EncodingError;
     fn try_from(bytes: &Encoding) -> Result<Self, Self::Error> {
@@ -219,6 +229,7 @@ impl TryFrom<&Encoding> for Element {
     }
 }
 
+#[cfg(feature = "std")]
 impl TryFrom<Encoding> for Element {
     type Error = EncodingError;
     fn try_from(bytes: Encoding) -> Result<Self, Self::Error> {
@@ -226,6 +237,7 @@ impl TryFrom<Encoding> for Element {
     }
 }
 
+#[cfg(feature = "std")]
 impl TryFrom<&[u8]> for Element {
     type Error = EncodingError;
 
@@ -238,6 +250,7 @@ impl TryFrom<&[u8]> for Element {
     }
 }
 
+#[cfg(feature = "std")]
 impl TryFrom<[u8; 32]> for Element {
     type Error = EncodingError;
 
@@ -247,6 +260,7 @@ impl TryFrom<[u8; 32]> for Element {
     }
 }
 
+#[cfg(feature = "std")]
 impl From<Element> for [u8; 32] {
     fn from(enc: Element) -> [u8; 32] {
         enc.vartime_compress().0
@@ -281,6 +295,7 @@ impl CanonicalDeserialize for Encoding {
     }
 }
 
+#[cfg(feature = "std")]
 impl CanonicalDeserialize for Element {
     fn deserialize_with_mode<R: Read>(
         reader: R,
